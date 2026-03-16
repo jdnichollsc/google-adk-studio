@@ -2,11 +2,38 @@ import { Handle, Position, type NodeProps } from "@xyflow/react";
 
 export function AgentNode({ data }: NodeProps) {
   return (
-    <div className="rounded-lg border border-blue-400 bg-[hsl(var(--card))] px-4 py-2 shadow">
-      <Handle type="target" position={Position.Top} />
-      <div className="text-sm font-medium text-[hsl(var(--card-foreground))]">{(data as { label?: string }).label}</div>
-      <div className="text-xs text-[hsl(var(--muted-foreground))]">Agent</div>
-      <Handle type="source" position={Position.Bottom} />
+    <div
+      className="min-w-[140px] rounded-lg border-l-[3px] border-l-[hsl(var(--accent-blue))] border-t border-r border-b border-t-[hsl(var(--border-1))] border-r-[hsl(var(--border-1))] border-b-[hsl(var(--border-1))] bg-[hsl(var(--surface-2))] px-4 py-3 shadow-[var(--shadow-card)]"
+    >
+      <Handle
+        type="target"
+        position={Position.Top}
+        style={{
+          width: 8,
+          height: 8,
+          background: "hsl(240, 2%, 52%)",
+          border: "2px solid hsl(240, 5%, 7%)",
+        }}
+      />
+      <div className="flex items-center gap-2">
+        <span className="text-sm">&#9889;</span>
+        <div>
+          <div className="text-sm font-medium text-[hsl(var(--neutral-6))]">
+            {(data as { label?: string }).label}
+          </div>
+          <div className="text-[11px] text-[hsl(var(--neutral-3))]">Agent</div>
+        </div>
+      </div>
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        style={{
+          width: 8,
+          height: 8,
+          background: "hsl(240, 2%, 52%)",
+          border: "2px solid hsl(240, 5%, 7%)",
+        }}
+      />
     </div>
   );
 }

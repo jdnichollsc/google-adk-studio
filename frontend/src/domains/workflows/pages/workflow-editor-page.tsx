@@ -6,6 +6,13 @@ import { useCreateWorkflow, useSaveWorkflow } from "../hooks/use-workflows";
 import { useStartWorkflowRun, useWorkflowRunStatus } from "../hooks/use-workflow-run";
 import { serializeGraph } from "../utils/graph-serializer";
 
+const statusStyles: Record<string, string> = {
+  running: "bg-[hsl(var(--accent-blue-dark))] text-[hsl(var(--accent-blue))] ring-1 ring-[hsl(var(--accent-blue)/0.3)]",
+  starting: "bg-[hsl(var(--accent-blue-dark))] text-[hsl(var(--accent-blue))] ring-1 ring-[hsl(var(--accent-blue)/0.3)]",
+  completed: "bg-[hsl(var(--accent-green-dark))] text-[hsl(var(--accent-green))] ring-1 ring-[hsl(var(--accent-green)/0.3)]",
+  failed: "bg-[hsl(var(--accent-red-dark))] text-[hsl(var(--accent-red))] ring-1 ring-[hsl(var(--accent-red)/0.3)]",
+};
+
 export function WorkflowEditorPage() {
   const [workflowId, setWorkflowId] = useState<string | null>(null);
   const workflowName = "Untitled Workflow";
@@ -41,37 +48,50 @@ export function WorkflowEditorPage() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center gap-3 border-b border-[hsl(var(--border))] px-4 py-2">
-        <h2 className="text-lg font-semibold">Workflow Editor</h2>
+      {/* Toolbar */}
+      <div className="flex items-center gap-3 border-b border-[hsl(var(--border-2))] bg-[hsl(var(--surface-2))] px-5 py-2.5">
+        <h2 className="text-sm font-semibold tracking-tight text-[hsl(var(--neutral-6))]">
+          Workflow Editor
+        </h2>
         <div className="flex-1" />
+
+        {/* Status badge */}
         {statusLabel && (
-          <span className={`rounded-full px-3 py-1 text-xs font-medium ${
-            statusLabel === "running"
-              ? "bg-blue-100 text-blue-700"
-              : statusLabel === "completed"
-                ? "bg-green-100 text-green-700"
-                : statusLabel === "failed"
-                  ? "bg-red-100 text-red-700"
-                  : "bg-gray-100 text-gray-700"
-          }`}>
+          <span
+            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
+              statusStyles[statusLabel] ??
+              "bg-[hsl(var(--surface-4))] text-[hsl(var(--neutral-3))]"
+            }`}
+          >
+            {statusLabel === "running" && (
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[hsl(var(--accent-blue))]" />
+            )}
             {statusLabel}
           </span>
         )}
+
+        {/* Save — primary CTA */}
         <button
           onClick={handleSave}
           disabled={isSaving}
-          className="rounded-md bg-[hsl(var(--primary))] px-4 py-1.5 text-sm font-medium text-[hsl(var(--primary-foreground))] hover:opacity-90 disabled:opacity-50"
+          className="rounded-md bg-[hsl(var(--accent-green))] px-4 py-1.5 text-xs font-semibold text-white shadow-sm transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+          style={{ transitionDuration: "var(--duration-fast)", transitionTimingFunction: "var(--ease-out)" }}
         >
-          {isSaving ? "Saving..." : "Save"}
+          {isSaving ? "Saving\u2026" : "Save"}
         </button>
+
+        {/* Run — secondary */}
         <button
           onClick={handleRun}
           disabled={!workflowId || startRun.isPending}
-          className="rounded-md border border-[hsl(var(--border))] px-4 py-1.5 text-sm font-medium text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] disabled:opacity-50"
+          className="rounded-md bg-[hsl(var(--surface-4))] px-4 py-1.5 text-xs font-semibold text-[hsl(var(--accent-green))] transition-all hover:bg-[hsl(var(--surface-5))] disabled:cursor-not-allowed disabled:opacity-40"
+          style={{ transitionDuration: "var(--duration-fast)", transitionTimingFunction: "var(--ease-out)" }}
         >
-          {startRun.isPending ? "Starting..." : "Run"}
+          {startRun.isPending ? "Starting\u2026" : "Run"}
         </button>
       </div>
+
+      {/* Body */}
       <div className="flex flex-1 overflow-hidden">
         <NodePalette />
         <div className="flex-1">
