@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, NavLink, Navigate } from "react-router-dom";
 import { QueryProvider } from "@/lib/query-provider";
 import { AgentsPage } from "@/domains/agents/pages/agents-page";
-import { ToolsPage } from "@/domains/tools/pages/tools-page";
 import { WorkflowEditorPage } from "@/domains/workflows/pages/workflow-editor-page";
 import { SessionsPage } from "@/domains/sessions/pages/sessions-page";
 import { RunsPage } from "@/domains/runs/pages/runs-page";
@@ -9,7 +8,6 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { to: "/agents", label: "Agents" },
-  { to: "/tools", label: "Tools" },
   { to: "/workflows", label: "Workflows" },
   { to: "/sessions", label: "Sessions" },
   { to: "/runs", label: "Runs" },
@@ -47,7 +45,6 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Navigate to="/agents" replace />} />
               <Route path="/agents" element={<AgentsPage />} />
-              <Route path="/tools" element={<ToolsPage />} />
               <Route path="/workflows" element={<WorkflowEditorPage />} />
               <Route path="/sessions" element={<SessionsPage />} />
               <Route path="/runs" element={<RunsPage />} />

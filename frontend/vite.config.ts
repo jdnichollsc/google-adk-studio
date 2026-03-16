@@ -16,6 +16,26 @@ export default defineConfig({
         target: process.env.VITE_API_TARGET || "http://localhost:8000",
         changeOrigin: true,
       },
+      "/list-apps": {
+        target: process.env.VITE_API_TARGET || "http://localhost:8000",
+        changeOrigin: true,
+      },
+      "/run_sse": {
+        target: process.env.VITE_API_TARGET || "http://localhost:8000",
+        changeOrigin: true,
+      },
+      "/run": {
+        target: process.env.VITE_API_TARGET || "http://localhost:8000",
+        changeOrigin: true,
+      },
+      "/apps": {
+        target: process.env.VITE_API_TARGET || "http://localhost:8000",
+        changeOrigin: true,
+      },
+      "/health": {
+        target: process.env.VITE_API_TARGET || "http://localhost:8000",
+        changeOrigin: true,
+      },
     },
   },
 });

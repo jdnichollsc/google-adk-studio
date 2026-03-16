@@ -46,7 +46,7 @@ export function AgentChat({ agentName }: { agentName: string }) {
     if (!text) return;
     setInput("");
     setHistory((prev) => [...prev, { role: "user", content: text }]);
-    startStream("/api/run_sse", {
+    startStream("/run_sse", {
       app_name: agentName,
       user_id: "studio-user",
       session_id: sessionIdRef.current,

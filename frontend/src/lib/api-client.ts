@@ -12,41 +12,21 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return res.json();
 }
 
-export interface AgentConfig {
-  name: string;
-  agent_type: "llm" | "sequential" | "parallel" | "loop";
-  model?: string;
-  description?: string;
-  instruction?: string;
-  tools?: string[];
-  sub_agents?: string[];
+async function requestRaw<T>(url: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(url, {
+    headers: { "Content-Type": "application/json" },
+    ...init,
+  });
+  if (!res.ok) {
+    throw new Error(`${res.status} ${res.statusText}`);
+  }
+  return res.json();
 }
 
 export interface AgentResponse {
-  id: string;
-  name: string;
-  agent_type: string;
-  config: Record<string, unknown>;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface ToolConfig {
   name: string;
   description?: string;
-  tool_type: "builtin" | "custom";
-  parameters?: Record<string, unknown>;
-  source_code?: string;
-}
-
-export interface ToolResponse {
-  id: string;
-  name: string;
-  tool_type: string;
-  config: Record<string, unknown>;
-  source_code?: string;
-  created_at: string;
-  updated_at: string;
+  tools?: string[];
 }
 
 export interface WorkflowNode {
@@ -78,22 +58,14 @@ export interface WorkflowResponse {
 
 export const api = {
   agents: {
-    list: () => request<{ agents: AgentResponse[] }>("/agents"),
-    get: (id: string) => request<AgentResponse>(`/agents/${id}`),
-    create: (data: AgentConfig) =>
-      request<AgentResponse>("/agents", { method: "POST", body: JSON.stringify(data) }),
-    update: (id: string, data: AgentConfig) =>
-      request<AgentResponse>(`/agents/${id}`, { method: "PUT", body: JSON.stringify(data) }),
-    delete: (id: string) =>
-      request<void>(`/agents/${id}`, { method: "DELETE" }),
-  },
-  tools: {
-    list: () => request<{ tools: ToolResponse[] }>("/tools"),
-    get: (id: string) => request<ToolResponse>(`/tools/${id}`),
-    create: (data: ToolConfig) =>
-      request<ToolResponse>("/tools", { method: "POST", body: JSON.stringify(data) }),
-    delete: (id: string) =>
-      request<void>(`/tools/${id}`, { method: "DELETE" }),
+    list: async (): Promise<AgentResponse[]> => {
+      const names = await requestRaw<string[]>("/list-apps");
+      return names.map((name) => ({ name }));
+    },
+    get: async (name: string): Promise<AgentResponse | undefined> => {
+      const agents = await requestRaw<AgentResponse[]>("/list-apps?detailed=true");
+      return agents.find((a) => a.name === name);
+    },
   },
   workflows: {
     list: () => request<{ workflows: WorkflowResponse[] }>("/workflows"),
