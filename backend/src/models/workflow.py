@@ -12,7 +12,7 @@ class WorkflowNodeConfig(BaseModel):
 
 class WorkflowNode(BaseModel):
     id: str
-    type: str = Field(pattern=r"^(agent|tool|condition|start|end)$")
+    type: str = Field(pattern=r"^(input|output|agent|tool|condition|parallel|loop|human_approval|delay)$")
     data: dict = {}
     position: dict = Field(default_factory=lambda: {"x": 0, "y": 0})
     config: WorkflowNodeConfig = WorkflowNodeConfig()

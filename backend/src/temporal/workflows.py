@@ -1,7 +1,9 @@
 import asyncio
 from datetime import timedelta
+from typing import Sequence
 
 from temporalio import workflow
+from temporalio.common import RawValue
 
 with workflow.unsafe.imports_passed_through():
     from simpleeval import simple_eval
@@ -15,8 +17,8 @@ class GraphWorkflow:
         self._results = {}
 
     @workflow.run
-    async def run(self, args: list) -> dict:
-        graph = args[0]
+    async def run(self, args: Sequence[RawValue]) -> dict:
+        graph = workflow.payload_converter().from_payloads([args[0].payload], [dict])[0]
         nodes = {n["id"]: n for n in graph["nodes"]}
         edges = graph["edges"]
         input_node = next((n for n in graph["nodes"] if n["type"] in ("input", "start")), None)
@@ -92,7 +94,7 @@ class GraphWorkflow:
 
         elif node_type == "delay":
             seconds = config.get("timeout_seconds") or data.get("timeout_seconds", 0)
-            await asyncio.sleep(seconds)
+            await workflow.sleep(timedelta(seconds=seconds))
             self._results[node_id] = {"delayed": seconds}
 
         else:

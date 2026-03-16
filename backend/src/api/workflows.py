@@ -11,6 +11,15 @@ from src.services.workflow_service import WorkflowService
 
 router = APIRouter(prefix="/api/workflows", tags=["workflows"])
 
+_temporal_client: Client | None = None
+
+
+async def get_temporal_client() -> Client:
+    global _temporal_client
+    if _temporal_client is None:
+        _temporal_client = await Client.connect(settings.temporal_address)
+    return _temporal_client
+
 
 def get_service(db: AsyncSession = Depends(get_db)) -> WorkflowService:
     return WorkflowService(db)
@@ -54,7 +63,7 @@ async def run_workflow(workflow_id: str, svc: WorkflowService = Depends(get_serv
     workflow = await svc.get(workflow_id)
     if not workflow:
         raise HTTPException(404, "Workflow not found")
-    client = await Client.connect(settings.temporal_address)
+    client = await get_temporal_client()
     run_id = f"run-{workflow_id}-{int(time.time())}"
     await client.start_workflow(
         "GraphWorkflow",
@@ -67,7 +76,7 @@ async def run_workflow(workflow_id: str, svc: WorkflowService = Depends(get_serv
 
 @router.get("/{workflow_id}/runs/{run_id}", response_model=WorkflowRunResponse)
 async def get_workflow_run(workflow_id: str, run_id: str):
-    client = await Client.connect(settings.temporal_address)
+    client = await get_temporal_client()
     handle = client.get_workflow_handle(run_id)
     try:
         result = await handle.query("get_status")
