@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.api.agents import router as agents_router
+from src.api.sessions import router as sessions_router
 from src.api.tools import router as tools_router
 from src.api.workflows import router as workflows_router
 from src.config import settings
@@ -17,6 +18,7 @@ app.add_middleware(
 )
 
 app.include_router(agents_router)
+app.include_router(sessions_router)
 app.include_router(tools_router)
 app.include_router(workflows_router)
 
