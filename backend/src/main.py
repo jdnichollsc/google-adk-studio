@@ -1,30 +1,19 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from google.adk.cli.fast_api import get_fast_api_app
 
-from src.api.agents import router as agents_router
-from src.api.run_sse import router as run_sse_router
-from src.api.sessions import router as sessions_router
-from src.api.tools import router as tools_router
-from src.api.workflows import router as workflows_router
 from src.config import settings
 
-app = FastAPI(title="ADK Studio")
-
-app.add_middleware(
-    CORSMiddleware,
+# ADK discovers agents from the agents/ directory automatically
+# Provides: /list-apps, /run, /run_sse, /health, session management
+app = get_fast_api_app(
+    agents_dir="agents",
+    web=False,  # We provide our own UI
+    session_service_uri=settings.adk_session_db or None,
     allow_origins=[o.strip() for o in settings.cors_origins.split(",")],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    host="0.0.0.0",
+    port=8000,
 )
 
-app.include_router(agents_router)
-app.include_router(run_sse_router)
-app.include_router(sessions_router)
-app.include_router(tools_router)
+# Mount our custom routes for workflows (Temporal)
+from src.api.workflows import router as workflows_router
+
 app.include_router(workflows_router)
-
-
-@app.get("/api/health")
-async def health():
-    return {"status": "ok"}

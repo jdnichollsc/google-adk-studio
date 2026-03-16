@@ -27,6 +27,5 @@ Thumbs.db
 # Docker volumes
 pgdata/
 
-# ADK generated agents
-backend/agents/*/
-!backend/agents/.gitkeep
+# ADK local state
+backend/agents/.adk/
