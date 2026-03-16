@@ -2,8 +2,6 @@
 
 An open-source development UI for [Google's Agent Development Kit (ADK)](https://google.github.io/adk-docs/). Write agents in Python, test them interactively, and compose durable multi-agent workflows visually — all from one interface.
 
-Think of it as [Mastra Studio](https://mastra.ai), but for Google ADK and Python.
-
 ## Why ADK Studio?
 
 Google ADK gives you a powerful Python framework for building AI agents with Gemini. But testing and orchestrating those agents means switching between terminals, API calls, and manual JSON wrangling. ADK Studio fixes that.
@@ -246,4 +244,4 @@ Contributions are welcome. Please open an issue to discuss before submitting a P
 
 ## License
 
-Apache 2.0
+MIT
