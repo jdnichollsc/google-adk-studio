@@ -1,6 +1,13 @@
 # ADK Studio
 
-An open-source development UI for [Google's Agent Development Kit (ADK)](https://google.github.io/adk-docs/). Write agents in Python, test them interactively, and compose durable multi-agent workflows visually — all from one interface.
+<p align="center">
+  <img src="frontend/public/logo.png" alt="ADK Studio" width="400" />
+</p>
+
+<p align="center">
+  An open-source development UI for <a href="https://google.github.io/adk-docs/">Google's Agent Development Kit (ADK)</a>.<br/>
+  Write agents in Python, test them interactively, and compose durable multi-agent workflows visually.
+</p>
 
 ## Why ADK Studio?
 
