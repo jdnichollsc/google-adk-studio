@@ -1,11 +1,11 @@
 # ADK Studio
 
 <p align="center">
-  <img src="frontend/public/logo.png" alt="ADK Studio" width="400" />
+  <img src="frontend/public/banner.png" alt="ADK Studio - Visual Development Environment for Google ADK" width="800" />
 </p>
 
 <p align="center">
-  An open-source development UI for <a href="https://google.github.io/adk-docs/">Google's Agent Development Kit (ADK)</a>.<br/>
+  <strong>An open-source development UI for <a href="https://google.github.io/adk-docs/">Google's Agent Development Kit (ADK)</a></strong><br/>
   Write agents in Python, test them interactively, and compose durable multi-agent workflows visually.
 </p>
 
