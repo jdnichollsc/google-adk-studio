@@ -1,8 +1,12 @@
+import time
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+from temporalio.client import Client
 
+from src.config import settings
 from src.db.database import get_db
-from src.models.workflow import WorkflowConfig, WorkflowListResponse, WorkflowResponse
+from src.models.workflow import WorkflowConfig, WorkflowListResponse, WorkflowResponse, WorkflowRunResponse
 from src.services.workflow_service import WorkflowService
 
 router = APIRouter(prefix="/api/workflows", tags=["workflows"])
@@ -43,3 +47,42 @@ async def update_workflow(workflow_id: str, config: WorkflowConfig, svc: Workflo
 async def delete_workflow(workflow_id: str, svc: WorkflowService = Depends(get_service)):
     if not await svc.delete(workflow_id):
         raise HTTPException(404, "Workflow not found")
+
+
+@router.post("/{workflow_id}/run", response_model=WorkflowRunResponse)
+async def run_workflow(workflow_id: str, svc: WorkflowService = Depends(get_service)):
+    workflow = await svc.get(workflow_id)
+    if not workflow:
+        raise HTTPException(404, "Workflow not found")
+    client = await Client.connect(settings.temporal_address)
+    run_id = f"run-{workflow_id}-{int(time.time())}"
+    await client.start_workflow(
+        "GraphWorkflow",
+        args=[workflow["graph"]],
+        id=run_id,
+        task_queue="adk-studio-workflows",
+    )
+    return WorkflowRunResponse(run_id=run_id, workflow_id=workflow_id, status="running")
+
+
+@router.get("/{workflow_id}/runs/{run_id}", response_model=WorkflowRunResponse)
+async def get_workflow_run(workflow_id: str, run_id: str):
+    client = await Client.connect(settings.temporal_address)
+    handle = client.get_workflow_handle(run_id)
+    try:
+        result = await handle.query("get_status")
+        status = "running"
+    except Exception:
+        result = None
+        status = "unknown"
+    try:
+        await handle.result(timeout=0)
+        status = "completed"
+    except TimeoutError:
+        pass
+    except Exception as exc:
+        if "completed" in str(exc).lower() or "closed" in str(exc).lower():
+            status = "completed"
+        elif status == "unknown":
+            status = "failed"
+    return WorkflowRunResponse(run_id=run_id, workflow_id=workflow_id, status=status)
