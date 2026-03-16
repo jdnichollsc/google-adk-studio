@@ -20,6 +20,7 @@ dependencies = [
     "sse-starlette",
     "simpleeval",
     "httpx",
+    "aiosqlite",
 ]
 
 [project.optional-dependencies]

@@ -49,7 +49,7 @@ services:
         condition: service_started
     environment:
       DATABASE_URL: postgresql+asyncpg://adk:adk@postgresql:5432/adk_studio
-      ADK_SESSION_DB: postgresql://adk:adk@postgresql:5432/adk_sessions
+      ADK_SESSION_DB: "sqlite:///./sessions.db"
       TEMPORAL_ADDRESS: temporal:7233
       GOOGLE_GENAI_USE_VERTEXAI: "FALSE"
       GOOGLE_API_KEY: ${GOOGLE_API_KEY}
@@ -72,7 +72,7 @@ services:
     environment:
       TEMPORAL_ADDRESS: temporal:7233
       DATABASE_URL: postgresql+asyncpg://adk:adk@postgresql:5432/adk_studio
-      ADK_SESSION_DB: postgresql://adk:adk@postgresql:5432/adk_sessions
+      ADK_SESSION_DB: "sqlite:///./sessions.db"
       GOOGLE_API_KEY: ${GOOGLE_API_KEY}
     volumes:
       - ./backend/src:/app/src
