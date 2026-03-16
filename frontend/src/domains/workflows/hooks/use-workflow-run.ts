@@ -14,8 +14,8 @@ async function startRun(workflowId: string): Promise<RunResponse> {
   return res.json();
 }
 
-async function getRunStatus(runId: string): Promise<RunResponse> {
-  const res = await fetch(`/api/runs/${runId}`);
+async function getRunStatus(workflowId: string, runId: string): Promise<RunResponse> {
+  const res = await fetch(`/api/workflows/${workflowId}/runs/${runId}`);
   if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
   return res.json();
 }
@@ -26,11 +26,11 @@ export function useStartWorkflowRun() {
   });
 }
 
-export function useWorkflowRunStatus(runId: string | null) {
+export function useWorkflowRunStatus(workflowId: string | null, runId: string | null) {
   return useQuery({
-    queryKey: ["run-status", runId],
-    queryFn: () => getRunStatus(runId!),
-    enabled: !!runId,
+    queryKey: ["run-status", workflowId, runId],
+    queryFn: () => getRunStatus(workflowId!, runId!),
+    enabled: !!workflowId && !!runId,
     refetchInterval: (query) => {
       const status = query.state.data?.status;
       return status === "running" ? 2000 : false;

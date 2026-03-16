@@ -2,24 +2,32 @@ import { useState } from "react";
 import { WorkflowCanvas } from "../components/workflow-canvas";
 import { NodePalette } from "../components/node-palette";
 import { useGraphStore } from "../hooks/use-graph-store";
-import { useCreateWorkflow } from "../hooks/use-workflows";
+import { useCreateWorkflow, useSaveWorkflow } from "../hooks/use-workflows";
 import { useStartWorkflowRun, useWorkflowRunStatus } from "../hooks/use-workflow-run";
 import { serializeGraph } from "../utils/graph-serializer";
 
 export function WorkflowEditorPage() {
   const [workflowId, setWorkflowId] = useState<string | null>(null);
+  const workflowName = "Untitled Workflow";
   const [runId, setRunId] = useState<string | null>(null);
   const { nodes, edges } = useGraphStore();
   const createWorkflow = useCreateWorkflow();
+  const saveWorkflow = useSaveWorkflow();
   const startRun = useStartWorkflowRun();
-  const { data: runStatus } = useWorkflowRunStatus(runId);
+  const { data: runStatus } = useWorkflowRunStatus(workflowId, runId);
+
+  const isSaving = createWorkflow.isPending || saveWorkflow.isPending;
 
   const handleSave = () => {
     const graph = serializeGraph(nodes, edges);
-    createWorkflow.mutate(
-      { name: `workflow-${Date.now()}`, graph },
-      { onSuccess: (res) => setWorkflowId(res.id) },
-    );
+    if (workflowId) {
+      saveWorkflow.mutate({ id: workflowId, data: { name: workflowName, graph } });
+    } else {
+      createWorkflow.mutate(
+        { name: workflowName, graph },
+        { onSuccess: (res) => setWorkflowId(res.id) },
+      );
+    }
   };
 
   const handleRun = () => {
@@ -51,10 +59,10 @@ export function WorkflowEditorPage() {
         )}
         <button
           onClick={handleSave}
-          disabled={createWorkflow.isPending}
+          disabled={isSaving}
           className="rounded-md bg-[hsl(var(--primary))] px-4 py-1.5 text-sm font-medium text-[hsl(var(--primary-foreground))] hover:opacity-90 disabled:opacity-50"
         >
-          {createWorkflow.isPending ? "Saving..." : "Save"}
+          {isSaving ? "Saving..." : "Save"}
         </button>
         <button
           onClick={handleRun}

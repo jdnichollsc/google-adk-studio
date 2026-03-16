@@ -51,7 +51,7 @@ export interface ToolResponse {
 
 export interface WorkflowNode {
   id: string;
-  type: "agent" | "tool" | "condition" | "start" | "end";
+  type: "input" | "output" | "agent" | "tool" | "condition" | "parallel" | "loop" | "human_approval" | "delay";
   data: Record<string, unknown>;
   position: { x: number; y: number };
 }
