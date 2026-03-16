@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { AgentList } from "../components/agent-list";
 import { AgentForm } from "../components/agent-form";
+import { AgentChat } from "../components/agent-chat";
 
 export function AgentsPage() {
   const [showForm, setShowForm] = useState(false);
+  const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
 
   return (
     <div className="space-y-6">
@@ -17,7 +19,8 @@ export function AgentsPage() {
         </button>
       </div>
       {showForm && <AgentForm onClose={() => setShowForm(false)} />}
-      <AgentList onSelect={() => {}} />
+      <AgentList onSelect={(agent) => setSelectedAgent(agent.name)} />
+      {selectedAgent && <AgentChat agentName={selectedAgent} />}
     </div>
   );
 }

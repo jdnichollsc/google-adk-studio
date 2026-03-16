@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, NavLink, Navigate } from "react-router-dom";
 import { QueryProvider } from "@/lib/query-provider";
 import { AgentsPage } from "@/domains/agents/pages/agents-page";
+import { WorkflowEditorPage } from "@/domains/workflows/pages/workflow-editor-page";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -48,7 +49,7 @@ export default function App() {
               <Route path="/" element={<Navigate to="/agents" replace />} />
               <Route path="/agents" element={<AgentsPage />} />
               <Route path="/tools" element={<Placeholder title="Tools" />} />
-              <Route path="/workflows" element={<Placeholder title="Workflows" />} />
+              <Route path="/workflows" element={<WorkflowEditorPage />} />
               <Route path="/sessions" element={<Placeholder title="Sessions" />} />
               <Route path="/runs" element={<Placeholder title="Runs" />} />
             </Routes>
