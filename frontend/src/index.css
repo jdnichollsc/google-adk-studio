@@ -1,26 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: 0 0% 3.9%;
-  --foreground: 0 0% 98%;
-  --card: 0 0% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --primary: 0 0% 98%;
-  --primary-foreground: 0 0% 9%;
-  --secondary: 0 0% 14.9%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 0 0% 14.9%;
-  --muted-foreground: 0 0% 63.9%;
-  --accent: 0 0% 14.9%;
-  --accent-foreground: 0 0% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 0 0% 14.9%;
-  --input: 0 0% 14.9%;
-  --ring: 0 0% 83.1%;
+  /* Surfaces - layered depth system */
+  --surface-1: 240 6% 4%;      /* #09090B - deepest background */
+  --surface-2: 240 5% 7%;      /* #111113 - card/panel background */
+  --surface-3: 240 4% 10%;     /* #18181B - elevated elements */
+  --surface-4: 240 4% 14%;     /* #222225 - hover states */
+  --surface-5: 240 3% 18%;     /* #2C2C30 - active states */
+  --surface-6: 240 3% 24%;     /* #3B3B40 - prominent elements */
+
+  /* Borders - transparent white for consistency */
+  --border-1: 0 0% 100% / 0.08;
+  --border-2: 0 0% 100% / 0.12;
+  --border-3: 0 0% 100% / 0.18;
+
+  /* Neutrals - text hierarchy */
+  --neutral-1: 240 4% 30%;     /* #484850 - disabled/hint */
+  --neutral-2: 240 3% 40%;     /* #62626A - subtle text */
+  --neutral-3: 240 2% 52%;     /* #808088 - muted text */
+  --neutral-4: 240 2% 65%;     /* #A0A0A8 - secondary text */
+  --neutral-5: 240 2% 80%;     /* #CACACF - primary text */
+  --neutral-6: 240 2% 93%;     /* #ECECEF - bright text */
+
+  /* Accents */
+  --accent-green: 142 71% 45%;     /* #22C55E */
+  --accent-green-dark: 145 50% 11%;/* #0D2818 */
+  --accent-red: 0 84% 60%;         /* #EF4444 */
+  --accent-red-dark: 0 40% 12%;    /* #2A1515 */
+  --accent-blue: 217 91% 60%;      /* #3B82F6 */
+  --accent-blue-dark: 217 50% 12%; /* #15202A */
+  --accent-amber: 38 92% 50%;      /* #F59E0B */
+  --accent-amber-dark: 35 45% 10%; /* #261D0D */
+  --accent-purple: 262 83% 58%;    /* #8B5CF6 */
+
+  /* Functional aliases */
+  --background: var(--surface-1);
+  --foreground: var(--neutral-5);
+  --card: var(--surface-2);
+  --card-foreground: var(--neutral-6);
+  --primary: var(--accent-green);
+  --primary-foreground: 0 0% 100%;
+  --secondary: var(--surface-3);
+  --secondary-foreground: var(--neutral-5);
+  --muted: var(--surface-3);
+  --muted-foreground: var(--neutral-3);
+  --accent: var(--surface-4);
+  --accent-foreground: var(--neutral-5);
+  --destructive: var(--accent-red);
+  --destructive-foreground: var(--neutral-6);
+  --border: var(--border-1);
+  --input: var(--border-2);
+  --ring: var(--accent-green);
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-dialog: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --shadow-glow-green: 0 0 12px rgba(34, 197, 94, 0.3);
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
 }
 
+* { border-color: hsl(var(--border)); }
+
 body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+  background-color: hsl(var(--surface-1));
+  color: hsl(var(--neutral-5));
+  font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+code, .font-mono {
+  font-family: 'Geist Mono', 'SF Mono', 'Fira Code', monospace;
 }
