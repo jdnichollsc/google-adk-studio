@@ -1,0 +1,45 @@
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.db.database import get_db
+from src.models.workflow import WorkflowConfig, WorkflowListResponse, WorkflowResponse
+from src.services.workflow_service import WorkflowService
+
+router = APIRouter(prefix="/api/workflows", tags=["workflows"])
+
+
+def get_service(db: AsyncSession = Depends(get_db)) -> WorkflowService:
+    return WorkflowService(db)
+
+
+@router.get("", response_model=WorkflowListResponse)
+async def list_workflows(svc: WorkflowService = Depends(get_service)):
+    workflows = await svc.list_all()
+    return {"workflows": workflows}
+
+
+@router.post("", response_model=WorkflowResponse, status_code=201)
+async def create_workflow(config: WorkflowConfig, svc: WorkflowService = Depends(get_service)):
+    return await svc.create(config)
+
+
+@router.get("/{workflow_id}", response_model=WorkflowResponse)
+async def get_workflow(workflow_id: str, svc: WorkflowService = Depends(get_service)):
+    workflow = await svc.get(workflow_id)
+    if not workflow:
+        raise HTTPException(404, "Workflow not found")
+    return workflow
+
+
+@router.put("/{workflow_id}", response_model=WorkflowResponse)
+async def update_workflow(workflow_id: str, config: WorkflowConfig, svc: WorkflowService = Depends(get_service)):
+    workflow = await svc.update(workflow_id, config)
+    if not workflow:
+        raise HTTPException(404, "Workflow not found")
+    return workflow
+
+
+@router.delete("/{workflow_id}", status_code=204)
+async def delete_workflow(workflow_id: str, svc: WorkflowService = Depends(get_service)):
+    if not await svc.delete(workflow_id):
+        raise HTTPException(404, "Workflow not found")
