@@ -1,7 +1,10 @@
 import { BrowserRouter, Routes, Route, NavLink, Navigate } from "react-router-dom";
 import { QueryProvider } from "@/lib/query-provider";
 import { AgentsPage } from "@/domains/agents/pages/agents-page";
+import { ToolsPage } from "@/domains/tools/pages/tools-page";
 import { WorkflowEditorPage } from "@/domains/workflows/pages/workflow-editor-page";
+import { SessionsPage } from "@/domains/sessions/pages/sessions-page";
+import { RunsPage } from "@/domains/runs/pages/runs-page";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -11,10 +14,6 @@ const navItems = [
   { to: "/sessions", label: "Sessions" },
   { to: "/runs", label: "Runs" },
 ];
-
-function Placeholder({ title }: { title: string }) {
-  return <h2 className="text-2xl font-semibold">{title}</h2>;
-}
 
 export default function App() {
   return (
@@ -48,10 +47,10 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Navigate to="/agents" replace />} />
               <Route path="/agents" element={<AgentsPage />} />
-              <Route path="/tools" element={<Placeholder title="Tools" />} />
+              <Route path="/tools" element={<ToolsPage />} />
               <Route path="/workflows" element={<WorkflowEditorPage />} />
-              <Route path="/sessions" element={<Placeholder title="Sessions" />} />
-              <Route path="/runs" element={<Placeholder title="Runs" />} />
+              <Route path="/sessions" element={<SessionsPage />} />
+              <Route path="/runs" element={<RunsPage />} />
             </Routes>
           </main>
         </div>
