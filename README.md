@@ -26,8 +26,8 @@ Google ADK gives you a powerful Python framework for building AI agents with Gem
 ### 1. Clone and configure
 
 ```bash
-git clone https://github.com/your-username/google-adk-ui.git
-cd google-adk-ui
+git clone https://github.com/your-username/adk-studio.git
+cd adk-studio
 cp .env.example .env
 ```
 
@@ -111,7 +111,7 @@ root_agent = SequentialAgent(
 ## Project Structure
 
 ```
-google-adk-ui/
+adk-studio/
 ├── backend/
 │   ├── agents/                  # Your agents live here (code-first)
 │   │   ├── greeter/agent.py     # Example: friendly greeter
