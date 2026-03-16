@@ -1,4 +1,5 @@
 import json
+from collections.abc import Sequence
 
 import asyncpg
 from google.adk.agents import Agent
@@ -6,6 +7,8 @@ from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai.types import Content, Part
 from temporalio import activity
+from temporalio.common import RawValue
+from temporalio.converter import DataConverter
 
 from src.config import settings
 
@@ -50,9 +53,14 @@ async def _run_agent(agent_id: str, inputs: dict) -> str:
 
 
 @activity.defn(dynamic=True)
-async def execute_node(args: list) -> dict:
+async def execute_node(args: Sequence[RawValue]) -> dict:
     activity_type = activity.info().activity_type
-    inputs = args[0] if args else {}
+    if args:
+        converter = DataConverter.default.payload_converter
+        decoded = converter.from_payloads([args[0].payload], [dict])
+        inputs = decoded[0]
+    else:
+        inputs = {}
 
     if activity_type.startswith("agent:"):
         agent_id = activity_type.split(":", 1)[1]

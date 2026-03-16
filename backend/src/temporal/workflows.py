@@ -1,6 +1,6 @@
 import asyncio
+from collections.abc import Sequence
 from datetime import timedelta
-from typing import Sequence
 
 from temporalio import workflow
 from temporalio.common import RawValue
