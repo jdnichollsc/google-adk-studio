@@ -1,12 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { useAgents } from "../hooks/use-agents";
 
-interface AgentListProps {
-  selectedAgent: string | null;
-  onSelect: (name: string) => void;
-}
-
-export function AgentList({ selectedAgent, onSelect }: AgentListProps) {
+export function AgentList() {
   const { data: agents, isLoading, error } = useAgents();
+  const navigate = useNavigate();
 
   /* Loading skeleton */
   if (isLoading) {
@@ -87,51 +84,40 @@ export function AgentList({ selectedAgent, onSelect }: AgentListProps) {
   /* Agent cards */
   return (
     <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-      {agents.map((agent) => {
-        const isSelected = selectedAgent === agent.name;
-        return (
-          <div
-            key={agent.name}
-            onClick={() => onSelect(agent.name)}
-            className={`
-              cursor-pointer rounded-lg border p-4
-              transition-all duration-200
-              ${
-                isSelected
-                  ? "border-[hsl(var(--accent-blue))] bg-[hsl(var(--surface-3))]"
-                  : "border-[hsl(var(--border-1))] bg-[hsl(var(--surface-2))] hover:border-[hsl(var(--border-2))] hover:bg-[hsl(var(--surface-3)/0.5)]"
-              }
-            `}
-            style={{ boxShadow: "var(--shadow-card)" }}
-          >
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-medium text-[hsl(var(--neutral-6))]">
-                {agent.name}
-              </h3>
-              <span className="rounded-full bg-[hsl(var(--accent-blue-dark))] px-2 py-0.5 text-[10px] font-medium tracking-wide text-[hsl(var(--accent-blue))]">
-                LLM
-              </span>
-            </div>
-            {agent.description && (
-              <p className="mt-2 text-xs leading-relaxed text-[hsl(var(--neutral-3))]">
-                {agent.description}
-              </p>
-            )}
-            {agent.tools && agent.tools.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {agent.tools.map((tool) => (
-                  <span
-                    key={tool}
-                    className="rounded bg-[hsl(var(--surface-4))] px-1.5 py-0.5 font-mono text-[10px] text-[hsl(var(--neutral-3))]"
-                  >
-                    {tool}
-                  </span>
-                ))}
-              </div>
-            )}
+      {agents.map((agent) => (
+        <div
+          key={agent.name}
+          onClick={() => navigate(`/agents/${agent.name}`)}
+          className="cursor-pointer rounded-lg border border-[hsl(var(--border-1))] bg-[hsl(var(--surface-2))] p-4 transition-all duration-200 hover:border-[hsl(var(--border-2))] hover:bg-[hsl(var(--surface-3)/0.5)]"
+          style={{ boxShadow: "var(--shadow-card)" }}
+        >
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-medium text-[hsl(var(--neutral-6))]">
+              {agent.name}
+            </h3>
+            <span className="rounded-full bg-[hsl(var(--accent-blue-dark))] px-2 py-0.5 text-[10px] font-medium tracking-wide text-[hsl(var(--accent-blue))]">
+              LLM
+            </span>
           </div>
-        );
-      })}
+          {agent.description && (
+            <p className="mt-2 text-xs leading-relaxed text-[hsl(var(--neutral-3))]">
+              {agent.description}
+            </p>
+          )}
+          {agent.tools && agent.tools.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {agent.tools.map((tool) => (
+                <span
+                  key={tool}
+                  className="rounded bg-[hsl(var(--surface-4))] px-1.5 py-0.5 font-mono text-[10px] text-[hsl(var(--neutral-3))]"
+                >
+                  {tool}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   );
 }

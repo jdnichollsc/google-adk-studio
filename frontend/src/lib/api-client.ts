@@ -27,6 +27,10 @@ export interface AgentResponse {
   name: string;
   description?: string;
   tools?: string[];
+  system_prompt?: string;
+  sub_agents?: string[];
+  model?: string;
+  agent_type?: string;
 }
 
 export interface WorkflowNode {

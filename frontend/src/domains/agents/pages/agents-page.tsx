@@ -1,12 +1,8 @@
-import { useState } from "react";
 import { AgentList } from "../components/agent-list";
-import { AgentChat } from "../components/agent-chat";
 
 export function AgentsPage() {
-  const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       {/* Page header */}
       <div>
         <h2 className="text-2xl font-semibold text-[hsl(var(--neutral-6))]">
@@ -18,20 +14,7 @@ export function AgentsPage() {
       </div>
 
       {/* Agent cards */}
-      <AgentList
-        selectedAgent={selectedAgent}
-        onSelect={(name) =>
-          setSelectedAgent((prev) => (prev === name ? null : name))
-        }
-      />
-
-      {/* Chat panel */}
-      {selectedAgent && (
-        <AgentChat
-          agentName={selectedAgent}
-          onClose={() => setSelectedAgent(null)}
-        />
-      )}
+      <AgentList />
     </div>
   );
 }
