@@ -58,6 +58,8 @@ export function Sidebar() {
         <NavSection label="Build">
           <NavItem to="/agents" icon={<AgentsIcon />} label="Agents" />
           <NavItem to="/workflows" icon={<WorkflowsIcon />} label="Workflows" />
+          <NavItem to="/tools" icon={<ToolsIcon />} label="Tools" />
+          <NavItem to="/mcps" icon={<McpIcon />} label="MCP Servers" />
         </NavSection>
         <NavSection label="Inspect">
           <NavItem to="/sessions" icon={<SessionsIcon />} label="Sessions" />
@@ -109,6 +111,26 @@ function RunsIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M4 2.5v11l9-5.5z" />
+    </svg>
+  );
+}
+
+function ToolsIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M10.5 2.5l3 3-7 7-4 1 1-4z" />
+      <path d="M9 4l3 3" />
+    </svg>
+  );
+}
+
+function McpIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="4" cy="8" r="2" />
+      <circle cx="12" cy="4" r="2" />
+      <circle cx="12" cy="12" r="2" />
+      <path d="M6 7.5l4-2.5M6 8.5l4 2.5" />
     </svg>
   );
 }

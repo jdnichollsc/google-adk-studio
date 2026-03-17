@@ -6,6 +6,8 @@ import { WorkflowsPage } from "@/domains/workflows/pages/workflows-page";
 import { WorkflowEditorPage } from "@/domains/workflows/pages/workflow-editor-page";
 import { SessionsPage } from "@/domains/sessions/pages/sessions-page";
 import { RunsPage } from "@/domains/runs/pages/runs-page";
+import { ToolsPage } from "@/domains/tools/pages/tools-page";
+import { McpsPage } from "@/domains/mcps/pages/mcps-page";
 import { Sidebar } from "@/components/sidebar";
 
 export default function App() {
@@ -22,6 +24,8 @@ export default function App() {
               <Route path="/workflows" element={<WorkflowsPage />} />
               <Route path="/workflows/new" element={<WorkflowEditorPage />} />
               <Route path="/workflows/:id" element={<WorkflowEditorPage />} />
+              <Route path="/tools" element={<ToolsPage />} />
+              <Route path="/mcps" element={<McpsPage />} />
               <Route path="/sessions" element={<SessionsPage />} />
               <Route path="/runs" element={<RunsPage />} />
             </Routes>
