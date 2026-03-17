@@ -9,6 +9,14 @@ export function useWorkflows() {
   });
 }
 
+export function useWorkflow(id: string | undefined) {
+  return useQuery({
+    queryKey: ["workflows", id],
+    queryFn: () => api.workflows.get(id!),
+    enabled: !!id,
+  });
+}
+
 export function useCreateWorkflow() {
   const qc = useQueryClient();
   return useMutation({

@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { WorkflowCanvas } from "../components/workflow-canvas";
 import { NodePalette } from "../components/node-palette";
+import { StepDetail } from "../components/step-detail";
 import { useGraphStore } from "../hooks/use-graph-store";
-import { useCreateWorkflow, useSaveWorkflow } from "../hooks/use-workflows";
+import { useWorkflow, useCreateWorkflow, useSaveWorkflow } from "../hooks/use-workflows";
 import { useStartWorkflowRun, useWorkflowRunStatus } from "../hooks/use-workflow-run";
 import { serializeGraph } from "../utils/graph-serializer";
+import type { Node, Edge } from "@xyflow/react";
 
 const statusStyles: Record<string, string> = {
   running: "bg-[hsl(var(--accent-blue-dark))] text-[hsl(var(--accent-blue))] ring-1 ring-[hsl(var(--accent-blue)/0.3)]",
@@ -14,14 +17,33 @@ const statusStyles: Record<string, string> = {
 };
 
 export function WorkflowEditorPage() {
-  const [workflowId, setWorkflowId] = useState<string | null>(null);
-  const workflowName = "Untitled Workflow";
+  const { id: urlId } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
+  const [workflowId, setWorkflowId] = useState<string | null>(urlId ?? null);
+  const [workflowName, setWorkflowName] = useState("Untitled Workflow");
   const [runId, setRunId] = useState<string | null>(null);
-  const { nodes, edges } = useGraphStore();
+
+  const { nodes, edges, selectedNodeId, setGraph, updateNodeData } = useGraphStore();
+  const selectedNode = nodes.find((n) => n.id === selectedNodeId) ?? null;
+
+  const { data: existingWorkflow } = useWorkflow(urlId);
   const createWorkflow = useCreateWorkflow();
   const saveWorkflow = useSaveWorkflow();
   const startRun = useStartWorkflowRun();
   const { data: runStatus } = useWorkflowRunStatus(workflowId, runId);
+
+  // Load existing workflow when fetched
+  useEffect(() => {
+    if (existingWorkflow) {
+      setWorkflowName(existingWorkflow.name);
+      setWorkflowId(existingWorkflow.id);
+      const graph = existingWorkflow.graph as { nodes?: Node[]; edges?: Edge[] } | undefined;
+      if (graph?.nodes) {
+        setGraph(graph.nodes, graph.edges ?? []);
+      }
+    }
+  }, [existingWorkflow, setGraph]);
 
   const isSaving = createWorkflow.isPending || saveWorkflow.isPending;
 
@@ -32,7 +54,12 @@ export function WorkflowEditorPage() {
     } else {
       createWorkflow.mutate(
         { name: workflowName, graph },
-        { onSuccess: (res) => setWorkflowId(res.id) },
+        {
+          onSuccess: (res) => {
+            setWorkflowId(res.id);
+            navigate(`/workflows/${res.id}`, { replace: true });
+          },
+        },
       );
     }
   };
@@ -44,15 +71,36 @@ export function WorkflowEditorPage() {
     });
   };
 
+  const handleUpdateNodeData = (data: Record<string, unknown>) => {
+    if (selectedNodeId) {
+      updateNodeData(selectedNodeId, data);
+    }
+  };
+
   const statusLabel = runStatus?.status ?? (runId ? "starting" : null);
 
   return (
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex items-center gap-3 border-b border-[hsl(var(--border-2))] bg-[hsl(var(--surface-2))] px-5 py-2.5">
-        <h2 className="text-sm font-semibold tracking-tight text-[hsl(var(--neutral-6))]">
-          Workflow Editor
-        </h2>
+        <button
+          onClick={() => navigate("/workflows")}
+          className="rounded p-1 text-[hsl(var(--neutral-3))] transition-colors hover:bg-[hsl(var(--surface-4))] hover:text-[hsl(var(--neutral-5))]"
+          style={{ transitionDuration: "var(--duration-fast)", transitionTimingFunction: "var(--ease-out)" }}
+          title="Back to Workflows"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M10 12L6 8l4-4" />
+          </svg>
+        </button>
+
+        <input
+          value={workflowName}
+          onChange={(e) => setWorkflowName(e.target.value)}
+          className="rounded border border-transparent bg-transparent px-2 py-1 text-sm font-semibold tracking-tight text-[hsl(var(--neutral-6))] hover:border-[hsl(var(--border-2))] focus:border-[hsl(var(--border-2))] focus:bg-[hsl(var(--surface-3))] focus:outline-none"
+          placeholder="Workflow name"
+        />
+
         <div className="flex-1" />
 
         {/* Status badge */}
@@ -70,7 +118,7 @@ export function WorkflowEditorPage() {
           </span>
         )}
 
-        {/* Save — primary CTA */}
+        {/* Save */}
         <button
           onClick={handleSave}
           disabled={isSaving}
@@ -80,7 +128,7 @@ export function WorkflowEditorPage() {
           {isSaving ? "Saving\u2026" : "Save"}
         </button>
 
-        {/* Run — secondary */}
+        {/* Run */}
         <button
           onClick={handleRun}
           disabled={!workflowId || startRun.isPending}
@@ -91,12 +139,17 @@ export function WorkflowEditorPage() {
         </button>
       </div>
 
-      {/* Body */}
+      {/* Body: palette | canvas | properties */}
       <div className="flex flex-1 overflow-hidden">
         <NodePalette />
         <div className="flex-1">
           <WorkflowCanvas />
         </div>
+        {selectedNode && (
+          <div className="w-80 border-l border-[hsl(var(--border-1))] bg-[hsl(var(--surface-1))] p-4 overflow-y-auto">
+            <StepDetail node={selectedNode} onUpdate={handleUpdateNodeData} />
+          </div>
+        )}
       </div>
     </div>
   );

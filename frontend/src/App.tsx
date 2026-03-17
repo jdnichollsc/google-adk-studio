@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryProvider } from "@/lib/query-provider";
 import { AgentsPage } from "@/domains/agents/pages/agents-page";
+import { AgentDetailPage } from "@/domains/agents/pages/agent-detail-page";
+import { WorkflowsPage } from "@/domains/workflows/pages/workflows-page";
 import { WorkflowEditorPage } from "@/domains/workflows/pages/workflow-editor-page";
 import { SessionsPage } from "@/domains/sessions/pages/sessions-page";
 import { RunsPage } from "@/domains/runs/pages/runs-page";
@@ -16,7 +18,10 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Navigate to="/agents" replace />} />
               <Route path="/agents" element={<AgentsPage />} />
-              <Route path="/workflows" element={<WorkflowEditorPage />} />
+              <Route path="/agents/:agentName" element={<AgentDetailPage />} />
+              <Route path="/workflows" element={<WorkflowsPage />} />
+              <Route path="/workflows/new" element={<WorkflowEditorPage />} />
+              <Route path="/workflows/:id" element={<WorkflowEditorPage />} />
               <Route path="/sessions" element={<SessionsPage />} />
               <Route path="/runs" element={<RunsPage />} />
             </Routes>

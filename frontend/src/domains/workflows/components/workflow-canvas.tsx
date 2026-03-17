@@ -28,6 +28,7 @@ const nodeColor = (node: { type?: string }) => {
 
 export function WorkflowCanvas() {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useGraphStore();
+  const setSelectedNodeId = useGraphStore((s) => s.setSelectedNodeId);
 
   return (
     <div className="h-full w-full bg-[hsl(var(--surface-1))]">
@@ -37,6 +38,8 @@ export function WorkflowCanvas() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onNodeClick={(_, node) => setSelectedNodeId(node.id)}
+        onPaneClick={() => setSelectedNodeId(null)}
         nodeTypes={nodeTypes}
         fitView
         className="[&_.react-flow__controls]:overflow-hidden [&_.react-flow__controls]:rounded-lg [&_.react-flow__controls]:border-[hsl(var(--border-2))] [&_.react-flow__controls]:bg-[hsl(var(--surface-3))] [&_.react-flow__controls]:shadow-[var(--shadow-card)] [&_.react-flow__controls_button]:border-b-[hsl(var(--border-1))] [&_.react-flow__controls_button]:bg-transparent [&_.react-flow__controls_button]:fill-[hsl(var(--neutral-4))] [&_.react-flow__controls_button:hover]:bg-[hsl(var(--surface-4))]"
