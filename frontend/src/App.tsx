@@ -8,6 +8,7 @@ import { SessionsPage } from "@/domains/sessions/pages/sessions-page";
 import { RunsPage } from "@/domains/runs/pages/runs-page";
 import { ToolsPage } from "@/domains/tools/pages/tools-page";
 import { McpsPage } from "@/domains/mcps/pages/mcps-page";
+import { SettingsPage } from "@/domains/settings/pages/settings-page";
 import { Sidebar } from "@/components/sidebar";
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
               <Route path="/mcps" element={<McpsPage />} />
               <Route path="/sessions" element={<SessionsPage />} />
               <Route path="/runs" element={<RunsPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
             </Routes>
           </main>
         </div>

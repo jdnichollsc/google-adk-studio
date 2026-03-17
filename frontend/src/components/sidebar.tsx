@@ -65,6 +65,9 @@ export function Sidebar() {
           <NavItem to="/sessions" icon={<SessionsIcon />} label="Sessions" />
           <NavItem to="/runs" icon={<RunsIcon />} label="Runs" />
         </NavSection>
+        <NavSection label="System">
+          <NavItem to="/settings" icon={<SettingsIcon />} label="Settings" />
+        </NavSection>
       </div>
       <div className="border-t border-[hsl(var(--border))] px-4 py-3">
         <p className="text-[10px] text-[hsl(var(--neutral-1))] font-mono">
@@ -131,6 +134,15 @@ function McpIcon() {
       <circle cx="12" cy="4" r="2" />
       <circle cx="12" cy="12" r="2" />
       <path d="M6 7.5l4-2.5M6 8.5l4 2.5" />
+    </svg>
+  );
+}
+
+function SettingsIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="8" cy="8" r="2.5" />
+      <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" />
     </svg>
   );
 }
